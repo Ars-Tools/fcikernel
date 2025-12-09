@@ -2,7 +2,7 @@ import Foundation
 import PackagePlugin
 @main
 struct PlugIn: BuildToolPlugin {
-	func createBuildCommands(context: PluginContext, target: Target) async throws -> [Command] {
+	func createBuildCommands(context: PluginContext, target: Target) async throws -> Array<Command> {
 		guard let target = target as?SourceModuleTarget else { return.init() }
 		return createBuildCommands(directory: context.pluginWorkDirectoryURL,
 								   sources: target.sourceFiles(withSuffix: "ci.metal").map(\.url))
@@ -30,10 +30,11 @@ extension PlugIn: XcodeBuildToolPlugin {
 				outputFiles: [output])
 		]
 	}
-	func createBuildCommands(context: XcodePluginContext, target: XcodeTarget) throws -> [Command] {
-		guard let target = target as?SourceModuleTarget else { return.init() }
-		return createBuildCommands(directory: context.pluginWorkDirectoryURL,
-								   sources: target.sourceFiles(withSuffix: "ci.metal").map(\.url))
+	func createBuildCommands(context: XcodePluginContext, target: XcodeTarget) throws -> Array<Command> {
+        createBuildCommands(directory: context.pluginWorkDirectoryURL,
+                            sources: target.inputFiles.map(\.url).filter {
+            $0.lastPathComponent.hasSuffix("ci.metal")
+        })
 	}
 }
 #else
