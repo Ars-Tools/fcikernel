@@ -5,8 +5,9 @@ let package = Package(
 	name: "fcikernel",
 	products: [
 		.plugin(
-			name: "fcikernel",
-			targets: ["ci.metal"]),
+			name: "ci.metal",
+			targets: ["ci.metal"]
+        ),
 	],
 	targets: [
 		.plugin(
